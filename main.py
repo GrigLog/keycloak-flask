@@ -2,15 +2,15 @@ import flask
 import requests
 
 from urllib.parse import urlencode
-import random
 import base64
 import json
 
 import urls
 import utils
+import constants
 
 app = flask.Flask(__name__)
-app.secret_key = 'xyz'
+app.secret_key = constants.appSecretKey
 
 
 @app.route('/')
@@ -19,7 +19,7 @@ def protectedResource():
     if ((token := flask.session.get('token')) is not None) and ((userInfo := utils.tryGetUserInfo(token)) is not None):
         return "Hello, {}!".format(userInfo['preferred_username'])
     authParams = {'response_type': 'code',
-                  'client_id': urls.clientId,
+                  'client_id': constants.clientId,
                   'redirect_uri': urls.local+'auth',
                   'response_mode': 'jwt',
                   'scope': 'openid'}
@@ -37,9 +37,9 @@ def auth():
     tokenParams = {
         'grant_type': 'authorization_code',
         'code': body['code'],
-        'client_id': urls.clientId,
+        'client_id': constants.clientId,
         'redirect_uri': urls.local+'auth',  # just for validation, KC will not redirect to the same address another time
-        'client_secret': 'VDCi9OJF6Bzn0mw7wCDhEJnH0nWJKKJq'  # only required when client access type is "confidential"
+        'client_secret': constants.clientSecret  # only required when client access type is "confidential"
     }
     r = requests.post(urls.tokenEndpoint, data=tokenParams).json()
     print(r)
@@ -60,12 +60,12 @@ def auth():
 
 @app.route('/logout')
 def logout():
-    return flask.redirect(urls.logoutEndpoint + "?" + urlencode({'redirect_uri': urls.local+'hello'}))
+    return flask.redirect(urls.logoutEndpoint + "?" + urlencode({'redirect_uri': urls.local+'logged_out'}))
 
 
-@app.route('/hello')
-def helloWorld():
-    return 'Hello, Anon!'
+@app.route('/logged_out')
+def loggedOut():
+    return 'Logged out.'
 
 
 app.run(port=5000)

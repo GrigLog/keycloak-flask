@@ -1,6 +1,6 @@
+from constants import realm
+
 keycloakHost = 'http://localhost:8080'
-realm = 'newrealm'
-clientId = 'myclient'
 baseUrl = '{}/auth/realms/{}/protocol/openid-connect/'.format(keycloakHost, realm)
 
 authEndpoint = baseUrl + "auth"
