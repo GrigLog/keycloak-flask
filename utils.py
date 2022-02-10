@@ -1,6 +1,5 @@
-import flask
-import requests
-import urls
+import json
+import base64
 
 
 def addPaddingB64(s: str):
@@ -8,9 +7,6 @@ def addPaddingB64(s: str):
     return s
 
 
-def tryGetUserInfo(token: str):
-    r = requests.post(urls.userInfoEndpoint, headers={'Authorization': 'Bearer ' + token}).json()
-    if 'error' in r:
-        print(r)
-        return None
-    return r
+def parseJwt(token: str):
+    header, body = [json.loads(base64.b64decode(addPaddingB64(e)).decode('utf-8')) for e in token.split('.')[:2]]
+    return {'header': header, 'body': body, 'signature': token.split('.')[2]}

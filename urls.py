@@ -5,6 +5,5 @@ baseUrl = '{}/auth/realms/{}/protocol/openid-connect/'.format(keycloakHost, real
 
 authEndpoint = baseUrl + "auth"
 tokenEndpoint = baseUrl + "token"
-userInfoEndpoint = baseUrl + "userinfo"
 logoutEndpoint = baseUrl + "logout"
 local = 'http://localhost:5000/'
