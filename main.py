@@ -18,7 +18,7 @@ def protectedResource():
     token = flask.session.get('token')
     jwt = None
     if token is not None and (jwt := utils.parseJwt(token))['body']['exp'] > time():
-        return "Hello, {}!".format(jwt['body']['preferred_username'])
+        return "Hello, {}!<br><a href={}/logout>Log out</a>".format(jwt['body']['preferred_username'], urls.local)
     authParams = {'response_type': 'code',
                   'client_id': constants.clientId,
                   'redirect_uri': urls.local+'auth',
@@ -64,7 +64,7 @@ def logout():
 
 @app.route('/logged_out')
 def loggedOut():
-    return 'Logged out.<br><a href = http://localhost:5000>Main page</a>'
+    return 'Logged out.<br><a href={}>Main page</a>'.format(urls.local)
 
 
 app.run(port=5000)
